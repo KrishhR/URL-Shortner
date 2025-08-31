@@ -1,10 +1,14 @@
 const express = require('express');
+const { 
+    handleGenerateNewShortUrl,
+    handleRedirectToOriginalUrl,
+    handleGetAnalytics,
+} = require('../controllers/url');
 
 const router = express.Router();
 
-// Sample route
-router.get('/', (req, res) => {
-    res.send('Welcome to the URL Shortener Service');
-});
+router.post('/', handleGenerateNewShortUrl);
+router.get('/:shortId', handleRedirectToOriginalUrl);
+router.get('/analytics/:shortId', handleGetAnalytics);
 
 module.exports = router;
