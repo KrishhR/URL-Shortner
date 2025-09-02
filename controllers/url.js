@@ -3,17 +3,21 @@ const URL = require('../models/url');
 
 async function handleGenerateNewShortUrl(req, res) {
     const body = req.body;
-    if (!body || !body.redirect_url) {
+    if (!body || !body.redirectURL) {
         return res.status(400).json({ status: 400, error: 'Invalid request. Missing redirectURL in request body.' });
     }
     // generate a shortId
     const shortId = nanoid(8);
     await URL.create({
         shortId: shortId,
-        redirectURL: body.redirect_url,
+        redirectURL: body.redirectURL,
         visitHistory: []
     })
-    return res.status(201).json({ status: 201, shortId: shortId });
+
+    return res.render('home', {
+        shortId: shortId,
+    })
+    // return res.status(201).json({ status: 201, shortId: shortId });
 }
 
 async function handleRedirectToOriginalUrl(req, res) {
