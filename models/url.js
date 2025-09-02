@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const urlSchema = mongoose.Schema({
     shortId: { type: String, required: true, unique: true },
     redirectURL: { type: String, required: true },
-    visitHistory: [{ timeStamp: { type: Number } }]
+    visitHistory: [{ timeStamp: { type: Number } }],
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users'}
 }
-, { timestamps: true });
+    , { timestamps: true });
 
 const URL = mongoose.model('URL', urlSchema);
 
