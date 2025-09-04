@@ -33,16 +33,7 @@ A secure Node.js URL shortener service using Express, MongoDB, and JWT-based aut
     npm install
     ```
 
-3. Configure environment variables in a `.env` file:
-    ```
-    PORT=4500
-    DB_URI=mongodb://localhost:27017
-    DB_NAME=urlshortner
-    BASE_URL=http://localhost:4500
-    JWT_SECRET=your_secret_key
-    ```
-
-4. Start the server:
+3. Start the server:
     ```sh
     npm start
     ```
@@ -69,20 +60,17 @@ A secure Node.js URL shortener service using Express, MongoDB, and JWT-based aut
     "redirectURL": "https://example.com"
   }
   ```
+- **GET** `/url/analytics/:shortId`  
+  _Protected_: Get analytics for a short URL.
 
 - **GET** `/url/:shortId`  
   _Public_: Redirect to the original URL.
 
-- **GET** `/url/analytics/:shortId`  
-  _Protected_: Get analytics for a short URL.
-
 ### Admin Operations
 
-- **GET** `/user/all`  
+- **GET** `/admin/urls`  
   _Admin only_: View all users.
 
-- **GET** `/url/all`  
-  _Admin only_: View all URLs.
 
 ---
 
@@ -113,5 +101,3 @@ URL-Shortner/
 ```
 
 ---
-
-## License
