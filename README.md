@@ -1,12 +1,15 @@
 # URL Shortener
 
-A simple Node.js URL shortener service using Express and MongoDB.
+A secure Node.js URL shortener service using Express, MongoDB, and JWT-based authentication.
 
 ## Features
 
-- Generate short URLs for any valid URL
-- Redirect to the original URL using the short URL
-- Track and view analytics (number of clicks and visit history) for each short URL
+- **User Authentication:** Signup and login with JWT-secured sessions
+- **Role-based Access:** Admin and normal user roles
+- **Short URL Generation:** Only authenticated users can create short URLs
+- **Redirection:** Anyone can use short URLs to redirect to the original destination
+- **Analytics:** Authenticated users can view click analytics for their URLs
+- **Admin Panel:** Admins can view all users and URLs
 
 ---
 
@@ -14,8 +17,8 @@ A simple Node.js URL shortener service using Express and MongoDB.
 
 ### Prerequisites
 
-- Node.js (v14+ recommended)
-- MongoDB instance (local or cloud)
+- Node.js (v14+)
+- MongoDB (local or cloud)
 
 ### Installation
 
@@ -30,6 +33,15 @@ A simple Node.js URL shortener service using Express and MongoDB.
     npm install
     ```
 
+3. Configure environment variables in a `.env` file:
+    ```
+    PORT=4500
+    DB_URI=mongodb://localhost:27017
+    DB_NAME=urlshortner
+    BASE_URL=http://localhost:4500
+    JWT_SECRET=your_secret_key
+    ```
+
 4. Start the server:
     ```sh
     npm start
@@ -39,50 +51,38 @@ A simple Node.js URL shortener service using Express and MongoDB.
 
 ## API Endpoints
 
-### 1. Generate a New Short URL
+### Authentication
 
-- **Endpoint:** `POST /url`
-- **Description:** Generates a new short URL for the provided original URL.
-- **Request Body:**
-    ```json
-    {
-      "redirect_url": "https://example.com"
-    }
-    ```
-- **Response:**
-    ```json
-    {
-      "status": 201,
-      "shortId": "AbCdEf12"
-    }
-    ```
+- **POST** `/user/signup`  
+  Create a new user account.
 
----
+- **POST** `/user/login`  
+  Login and receive a JWT token (stored in a cookie).
 
-### 2. Redirect to Original URL
+### Short URL Operations
 
-- **Endpoint:** `GET /url/:shortId`
-- **Description:** Redirects to the original URL associated with the given short ID and logs the visit.
-- **Response:** Redirects to the original URL.
+- **POST** `/url`  
+  _Protected_: Create a new short URL.  
+  **Body:**  
+  ```json
+  {
+    "redirectURL": "https://example.com"
+  }
+  ```
 
----
+- **GET** `/url/:shortId`  
+  _Public_: Redirect to the original URL.
 
-### 3. Get Analytics for a Short URL
+- **GET** `/url/analytics/:shortId`  
+  _Protected_: Get analytics for a short URL.
 
-- **Endpoint:** `GET /url/analytics/:shortId`
-- **Description:** Returns analytics for the given short ID, including total clicks and visit history.
-- **Response:**
-    ```json
-    {
-      "status": 200,
-      "shortenUrl": "http://localhost:4500/url/AbCdEf12",
-      "totalClicks": 5,
-      "analytics": [
-        { "timeStamp": 1693555200000 },
-        { "timeStamp": 1693555300000 }
-      ]
-    }
-    ```
+### Admin Operations
+
+- **GET** `/user/all`  
+  _Admin only_: View all users.
+
+- **GET** `/url/all`  
+  _Admin only_: View all URLs.
 
 ---
 
@@ -91,11 +91,21 @@ A simple Node.js URL shortener service using Express and MongoDB.
 ```
 URL-Shortner/
 ├── controllers/
-│   └── url.js
+│   ├── url.js
+│   └── user.js
 ├── models/
-│   └── url.js
+│   ├── url.js
+│   └── user.js
 ├── routes/
-│   └── url.js
+│   ├── url.js
+│   ├── user.js
+│   └── staticRoutes.js
+├── middlewares/
+│   └── auth.js
+├── services/
+│   └── auth.js
+├── views/
+│   └── home.ejs
 ├── connection.js
 ├── index.js
 ├── package.json
@@ -104,4 +114,4 @@ URL-Shortner/
 
 ---
 
-##
+## License
