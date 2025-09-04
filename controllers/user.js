@@ -4,6 +4,7 @@ const { setUser } = require('../services/auth');
 
 async function handleUserSignup(req, res) {
     const { username, email, password } = req.body;
+    // validatation of username, email, and password are done here! However, it can be handled in frontend(React) also.
     await User.create({
         username: username,
         email: email,
@@ -19,7 +20,7 @@ async function handleUserLogin(req, res) {
 
     if (!userFromDB) {
         return res.render('login', {
-            error: 'Invalid email or password'
+            error: 'Note: Invalid email or password'
         });
     }
     const sessionId = uuidv4();

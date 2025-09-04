@@ -17,7 +17,7 @@
     <div>
         <% if (locals.shortId) { %>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <p>Your shortened URL is: <em id="urlToCopy">http://localhost:4500/url/<%= shortId %></em></p>
+                <p>Your shortened URL is: <em id="urlToCopy">http://localhost:4500/<%= shortId %></em></p>
             </div>
             <% } %>
     </div>
@@ -46,7 +46,7 @@
                                 <%= idx + 1 %>.
                             </td>
                             <td align="center">
-                                <span>http://localhost:4500/url/<%= url.shortId %></span>
+                                <span>http://localhost:4500/<%= url.shortId %></span>
                             </td>
                             <td align="center">
                                 <%= url.redirectURL %>
