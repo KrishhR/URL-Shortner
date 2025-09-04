@@ -38,6 +38,9 @@
                     <th>Shortened URL</th>
                     <th>Redirect URL</th>
                     <th>No. Of Clicks</th>
+                    <% if (locals.adminLogin && locals.users) { %>
+                        <th>Created by</th>
+                        <% } %>
                 </thead>
                 <tbody>
                     <% urls.forEach((url, idx)=> { %>
@@ -54,6 +57,14 @@
                             <td align="center">
                                 <%= url.visitHistory.length %>
                             </td>
+                            <% if (locals.adminLogin && locals.users) { 
+                                const id = url.createdBy.toString(); 
+                                const user = users.find(user=> user._id.toString() === id);
+                                %>
+                                <td align="center">
+                                    <%= user ? user.username : 'Unknown' %>
+                                </td>
+                                <% } %>
                         </tr>
                         <% }) %>
                 </tbody>

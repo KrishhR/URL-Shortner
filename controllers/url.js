@@ -48,11 +48,11 @@ const handleGetAnalytics = async (req, res) => {
         return res.status(404).json({ status: 404, error: 'No URL entry found for the given shortId.' });
     }
     return res.status(200)
-        .json({ 
-            status: 200, 
+        .json({
+            status: 200,
             shortenUrl: `${process.env.BASE_URL}/${urlEntry.shortId}`,
-            totalClicks: urlEntry.visitHistory.length, 
-            analytics: urlEntry.visitHistory 
+            totalClicks: urlEntry.visitHistory.length,
+            analytics: urlEntry.visitHistory
         });
 }
 

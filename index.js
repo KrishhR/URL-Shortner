@@ -10,7 +10,7 @@ const staticRoutes = require('./routes/staticRoutes');
 const userRoutes = require('./routes/user');
 const {handleRedirectToOriginalUrl} = require('./controllers/url');
 
-const { restrictToLoggedInUserOnly, checkAuth } = require('./middlewares/auth');
+const { checkForAuthentication, restrictTo } = require('./middlewares/auth');
 
 dotenv.config();
 const PORT = process.env.PORT || 4500;
@@ -31,14 +31,15 @@ function startServer() {
         app.use(express.json());
         app.use(express.urlencoded({ extended: false }));
         app.use(cookieParser());
+        app.use(checkForAuthentication);
 
-        app.use('/', checkAuth, staticRoutes);
+        app.use('/', staticRoutes);
         app.use('/user', userRoutes);
 
         // Public access for redirect route
         app.get('/:shortId', handleRedirectToOriginalUrl);
 
-        app.use('/url', restrictToLoggedInUserOnly, urlRoutes);
+        app.use('/url', restrictTo(['NORMAL', 'ADMIN']), urlRoutes);
 
 
 
