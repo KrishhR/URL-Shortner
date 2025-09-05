@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const urlSchema = mongoose.Schema({
+const urlSchema = Schema({
     shortId: { type: String, required: true, unique: true },
     redirectURL: { type: String, required: true },
     visitHistory: [{ timeStamp: { type: Number } }],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users'}
+    createdBy: { type: Schema.Types.ObjectId, ref: 'users'}
 }
     , { timestamps: true });
 
-const URL = mongoose.model('URL', urlSchema);
+const URL = model('URL', urlSchema);
 
-module.exports = URL;   
+export default URL;   

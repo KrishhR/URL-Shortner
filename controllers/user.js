@@ -1,11 +1,11 @@
-const User = require('../models/user');
+import UserModel from '../models/user.js';
 // const { v4: uuidv4 } = require('uuid');
-const { setUser } = require('../services/auth');
+import userServices from '../services/auth.js';
 
 async function handleUserSignup(req, res) {
     const { username, email, password } = req.body;
     // validatation of username, email, and password are done here! However, it can be handled in frontend(React) also.
-    await User.create({
+    await UserModel.create({
         username: username,
         email: email,
         password: password
@@ -16,7 +16,7 @@ async function handleUserSignup(req, res) {
 
 async function handleUserLogin(req, res) {
     const { email, password } = req.body;
-    const userFromDB = await User.findOne({ email, password });
+    const userFromDB = await UserModel.findOne({ email, password });
 
     if (!userFromDB) {
         return res.render('login', {
@@ -27,12 +27,12 @@ async function handleUserLogin(req, res) {
     // setUser(sessionId, userFromDB);
     // res.cookie('uid', sessionId);
 
-    const token = setUser(userFromDB);
+    const token = userServices.setUser(userFromDB);
     res.cookie('token', token);
     return res.redirect('/');
 }
 
-module.exports = {
+export default {
     handleUserSignup,
     handleUserLogin
 };

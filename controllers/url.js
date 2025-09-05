@@ -1,5 +1,5 @@
-const { nanoid } = require('nanoid');
-const URL = require('../models/url');
+import { nanoid } from 'nanoid';
+import URLModel from '../models/url.js';
 
 async function handleGenerateNewShortUrl(req, res) {
     const body = req.body;
@@ -8,7 +8,7 @@ async function handleGenerateNewShortUrl(req, res) {
     }
     // generate a shortId
     const shortId = nanoid(8);
-    await URL.create({
+    await URLModel.create({
         shortId: shortId,
         redirectURL: body.redirectURL,
         visitHistory: [],
@@ -26,7 +26,7 @@ async function handleRedirectToOriginalUrl(req, res) {
     if (!shortId) {
         return res.status(400).json({ status: 400, error: 'Invalid request. Missing shortId in request params.' });
     }
-    const urlEntry = await URL.findOneAndUpdate(
+    const urlEntry = await URLModel.findOneAndUpdate(
         { shortId: shortId },
         {
             $push: { visitHistory: [{ timeStamp: Date.now() }] }
@@ -43,7 +43,7 @@ const handleGetAnalytics = async (req, res) => {
     if (!shortId) {
         return res.status(400).json({ status: 400, error: 'Invalid request. Missing shortId in request params.' });
     }
-    const urlEntry = await URL.findOne({ shortId: shortId });
+    const urlEntry = await URLModel.findOne({ shortId: shortId });
     if (!urlEntry) {
         return res.status(404).json({ status: 404, error: 'No URL entry found for the given shortId.' });
     }
@@ -56,7 +56,7 @@ const handleGetAnalytics = async (req, res) => {
         });
 }
 
-module.exports = {
+export default {
     handleGenerateNewShortUrl,
     handleRedirectToOriginalUrl,
     handleGetAnalytics,

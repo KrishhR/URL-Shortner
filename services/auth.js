@@ -14,7 +14,7 @@
 // }
 
 
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 const secret_key = "sfsfKBH@242SSD@$23";
 
 function setUser(user) {
@@ -34,7 +34,7 @@ function getUser(token) {
     }
 }
 
-module.exports = {
+export default {
     setUser,
     getUser,
 }

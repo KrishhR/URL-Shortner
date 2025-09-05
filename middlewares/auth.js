@@ -1,4 +1,4 @@
-const { getUser } = require('../services/auth');
+import userServices from '../services/auth.js';
 
 // AUTHENTICATION Function
 function checkForAuthentication(req, res, next) {
@@ -8,7 +8,7 @@ function checkForAuthentication(req, res, next) {
     if (!tokenCookie) return next();
 
     const token = tokenCookie;
-    const user = getUser(token);
+    const user = userServices.getUser(token);
     
     req.user = user;
     return next();
@@ -45,7 +45,7 @@ function restrictTo(roles = []) {
 //     next();
 // }
 
-module.exports = {
+export default {
     checkForAuthentication,
     restrictTo,
 }
