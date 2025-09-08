@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Url Shortner</title>
+    <title>URL Shortener</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,64 +13,67 @@
 </head>
 
 <body>
-    <h1>Welcome to URL Shortner</h1>
-    <div>
-        <% if (locals.shortId) { %>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <p>Your shortened URL is: <em id="urlToCopy">http://localhost:4500/<%= shortId %></em></p>
-            </div>
-            <% } %>
-    </div>
+    <h1>Welcome to URL Shortener</h1>
+
+    <!-- Show shortened URL if available -->
+    <% if (locals.shortId) { %>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <p>Your shortened URL is: <em id="urlToCopy">http://localhost:4500/<%= shortId %></em></p>
+        </div>
+    <% } %>
+
     <br>
+
+    <!-- URL Submission Form -->
     <div>
         <form method="POST" action="/url">
-            <label for="redirect_url">Enter the url: </label>
-            <input type="text" name="redirectURL" id="redirect_url" placeholder="https://example.com/... " />
+            <label for="redirect_url">Enter the URL: </label>
+            <input type="text" name="redirectURL" id="redirect_url" placeholder="https://example.com/..." required />
             <button type="submit">Generate</button>
         </form>
     </div>
+
     <br>
-    <div>
-        <% if (locals.urls) { %>
+
+    <!-- URL List Table -->
+    <% if (locals.urls && urls.length > 0) { %>
+        <div>
             <table border="1" cellpadding="10" cellspacing="0">
                 <thead>
-                    <th>S. No.</th>
-                    <th>Shortened URL</th>
-                    <th>Redirect URL</th>
-                    <th>No. Of Clicks</th>
-                    <% if (locals.adminLogin && locals.users) { %>
-                        <th>Created by</th>
+                    <tr>
+                        <th>S. No.</th>
+                        <th>Shortened URL</th>
+                        <th>Redirect URL</th>
+                        <th>No. of Clicks</th>
+                        <% if (locals.adminLogin && locals.users) { %>
+                            <th>Created By</th>
                         <% } %>
+                    </tr>
                 </thead>
                 <tbody>
-                    <% urls.forEach((url, idx)=> { %>
+                    <% urls.forEach((url, idx) => { %>
                         <tr>
+                            <td align="center"><%= idx + 1 %></td>
                             <td align="center">
-                                <%= idx + 1 %>.
+                                <a href="http://localhost:4500/<%= url.shortId %>" target="_blank">
+                                    http://localhost:4500/<%= url.shortId %>
+                                </a>
                             </td>
-                            <td align="center">
-                                <span>http://localhost:4500/<%= url.shortId %></span>
-                            </td>
-                            <td align="center">
-                                <%= url.redirectURL %>
-                            </td>
-                            <td align="center">
-                                <%= url.visitHistory.length %>
-                            </td>
-                            <% if (locals.adminLogin && locals.users) { 
-                                const id = url.createdBy.toString(); 
-                                const user = users.find(user=> user._id.toString() === id);
-                                %>
-                                <td align="center">
-                                    <%= user ? user.username : 'Unknown' %>
-                                </td>
-                                <% } %>
+                            <td align="center"><%= url.redirectURL %></td>
+                            <td align="center"><%= url.visitHistory.length %></td>
+                            <% if (locals.adminLogin && locals.users) {
+                                const id = url.createdBy?.toString();
+                                const user = users.find(user => user._id.toString() === id);
+                            %>
+                                <td align="center"><%= user ? user.username : url.createdBy ? 'Unknown' : 'Discord User' %></td>
+                            <% } %>
                         </tr>
-                        <% }) %>
+                    <% }); %>
                 </tbody>
             </table>
-            <% } %>
-    </div>
+        </div>
+    <% } %>
+
 </body>
 
 </html>

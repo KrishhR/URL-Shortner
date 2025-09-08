@@ -8,6 +8,7 @@ import connectionToDB from './connection.js';
 import urlRoutes from './routes/url.js';
 import staticRoutes from './routes/staticRoutes.js';
 import userRoutes from './routes/user.js';
+import discordRoutes from './routes/DiscordRoutes.js';
 import urlController from './controllers/url.js';
 
 import authMiddleware from './middlewares/auth.js';
@@ -21,6 +22,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', resolve('./views'));
 
+// Connection to MongoDB 
 connectionToDB(`${process.env.DB_URI}/${process.env.DB_NAME}`)
     .then(() => console.log('MongoDB connected successfully'))
     .catch((err) => console.log('MongoDB Error: ', err));
@@ -37,6 +39,9 @@ function startServer() {
 
         // Public access for redirect route
         app.get('/:shortId', urlController.handleRedirectToOriginalUrl);
+
+        // Discord Bot Routes
+        app.use('/discord', discordRoutes);
 
         app.use('/url', authMiddleware.restrictTo(['NORMAL', 'ADMIN']), urlRoutes);
 

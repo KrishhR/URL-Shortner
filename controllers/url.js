@@ -56,9 +56,33 @@ const handleGetAnalytics = async (req, res) => {
         });
 }
 
+// public access route for Discord Bot
+const handleCreateNewShortUrlOnDiscord = async (req, res) => {
+    const body = req.body;
+    if (!body || !body.redirectURL) {
+        return res.status(400).json({ status: 400, error: 'Invalid request. Missing redirectURL in request body.' });
+    }
+
+    const urlFromDB = await URLModel.findOne({ redirectURL: body.redirectURL });
+    if (urlFromDB) {
+        return res.status(200).json({ status: 200, shortId: urlFromDB.shortId });
+    }
+    else {
+        const shortId = nanoid(8);   
+        await URLModel.create({
+            shortId: shortId,
+            redirectURL: body.redirectURL,
+            visitHistory: [],
+            createdBy: req.user?._id,
+        })
+        return res.status(201).json({ status: 201, shortId: shortId });
+    }
+}
+
 export default {
     handleGenerateNewShortUrl,
     handleRedirectToOriginalUrl,
     handleGetAnalytics,
+    handleCreateNewShortUrlOnDiscord,
 };
 
